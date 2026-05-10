@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import tempIcon from "../../asset/image/temp-icon.png";
 import sunIcon from "../../asset/image/sun-icon.png";
 import hudIcon from "../../asset/image/hud-icon.png";
+import fanImg from "../../asset/image/fan.png";
+import bulbImg from "../../asset/image/light.png";
+import hudImg from "../../asset/image/hud.png";
 import { LineChart } from "../comp/LineChart";
 import { SensorData } from "../model/SensorData";
 import { SensorDataService } from "../service/SensorDataService";
@@ -36,6 +39,12 @@ const deviceLabel: Record<string, string> = {
   fan:          "Quạt (Fan)",
   bulb:         "Đèn (Bulb)",
   dehumidifier: "Máy hút ẩm",
+};
+
+const deviceIcons: Record<string, string> = {
+  fan:          fanImg,
+  bulb:         bulbImg,
+  dehumidifier: hudImg,
 };
 
 // ─── DashBoard ────────────────────────────────────────────────────────────────
@@ -195,8 +204,13 @@ export const DashBoard = () => {
       {/* ── Device Toggles ── */}
       <div className="device-cards">
         {(["fan", "bulb", "dehumidifier"] as const).map((device) => (
-          <div key={device} className={deviceCardClass[device]}>
-            <span className="device-card-name">{deviceLabel[device]}</span>
+          <div key={device} className={`${deviceCardClass[device]} ${device} ${devices[device] ? "on" : ""}`}>
+            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              <div className="device-card-icon">
+                <img src={deviceIcons[device]} alt={device} />
+              </div>
+              <span className="device-card-name">{deviceLabel[device]}</span>
+            </div>
             <ToggleSwitch
               checked={devices[device]}
               onChange={() => handleDeviceToggle(device)}

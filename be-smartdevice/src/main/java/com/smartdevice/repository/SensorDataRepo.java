@@ -24,36 +24,38 @@ public interface SensorDataRepo extends JpaRepository<SensorData, Long> {
             "WHERE (:keyword IS NULL OR :keyword = '' OR " +
             "    (:type = 'all' AND (" +
             "        CAST(id AS CHAR) LIKE CONCAT('%', :keyword, '%') OR " +
-            "        CAST(temperature AS CHAR) LIKE CONCAT('%', :keyword, '%') OR " +
-            "        CAST(humidity AS CHAR) LIKE CONCAT('%', :keyword, '%') OR " +
-            "        CAST(light_level AS CHAR) LIKE CONCAT('%', :keyword, '%') OR " +
-            "        CAST(wind_speed AS CHAR) LIKE CONCAT('%', :keyword, '%') OR " +
-            "        CAST(time AS CHAR) LIKE CONCAT('%', :keyword, '%')" +
+            "        CONCAT(temperature, '°C') LIKE CONCAT('%', :keyword, '%') OR " +
+            "        CONCAT(humidity, '%') LIKE CONCAT('%', :keyword, '%') OR " +
+            "        CONCAT(light_level, ' lux') LIKE CONCAT('%', :keyword, '%') OR " +
+            "        CONCAT(wind_speed, ' m/s') LIKE CONCAT('%', :keyword, '%') OR " +
+            "        DATE_FORMAT(time, '%d %b %Y, %H:%i:%s') LIKE CONCAT('%', :keyword, '%') OR " +
+            "        CONCAT(temperature, '°C ', humidity, '% ', light_level, ' lux') LIKE CONCAT('%', :keyword, '%')" +
             "    )) OR " +
             "    (:type = 'id'          AND CAST(id AS CHAR) LIKE CONCAT('%', :keyword, '%')) OR " +
-            "    (:type = 'temperature' AND CAST(temperature AS CHAR) LIKE CONCAT('%', :keyword, '%')) OR " +
-            "    (:type = 'humidity'    AND CAST(humidity AS CHAR) LIKE CONCAT('%', :keyword, '%')) OR " +
-            "    (:type = 'light'       AND CAST(light_level AS CHAR) LIKE CONCAT('%', :keyword, '%')) OR " +
-            "    (:type = 'wind_speed'  AND CAST(wind_speed AS CHAR) LIKE CONCAT('%', :keyword, '%')) OR " +
-            "    (:type = 'time'        AND CAST(time AS CHAR) LIKE CONCAT('%', :keyword, '%'))" +
+            "    (:type = 'temperature' AND CONCAT(temperature, '°C') LIKE CONCAT('%', :keyword, '%')) OR " +
+            "    (:type = 'humidity'    AND CONCAT(humidity, '%') LIKE CONCAT('%', :keyword, '%')) OR " +
+            "    (:type = 'light'       AND CONCAT(light_level, ' lux') LIKE CONCAT('%', :keyword, '%')) OR " +
+            "    (:type = 'wind_speed'  AND CONCAT(wind_speed, ' m/s') LIKE CONCAT('%', :keyword, '%')) OR " +
+            "    (:type = 'time'        AND DATE_FORMAT(time, '%d %b %Y, %H:%i:%s') LIKE CONCAT('%', :keyword, '%'))" +
             ")",
             countQuery =
             "SELECT COUNT(*) FROM sensor_data " +
             "WHERE (:keyword IS NULL OR :keyword = '' OR " +
             "    (:type = 'all' AND (" +
             "        CAST(id AS CHAR) LIKE CONCAT('%', :keyword, '%') OR " +
-            "        CAST(temperature AS CHAR) LIKE CONCAT('%', :keyword, '%') OR " +
-            "        CAST(humidity AS CHAR) LIKE CONCAT('%', :keyword, '%') OR " +
-            "        CAST(light_level AS CHAR) LIKE CONCAT('%', :keyword, '%') OR " +
-            "        CAST(wind_speed AS CHAR) LIKE CONCAT('%', :keyword, '%') OR " +
-            "        CAST(time AS CHAR) LIKE CONCAT('%', :keyword, '%')" +
+            "        CONCAT(temperature, '°C') LIKE CONCAT('%', :keyword, '%') OR " +
+            "        CONCAT(humidity, '%') LIKE CONCAT('%', :keyword, '%') OR " +
+            "        CONCAT(light_level, ' lux') LIKE CONCAT('%', :keyword, '%') OR " +
+            "        CONCAT(wind_speed, ' m/s') LIKE CONCAT('%', :keyword, '%') OR " +
+            "        DATE_FORMAT(time, '%d %b %Y, %H:%i:%s') LIKE CONCAT('%', :keyword, '%') OR " +
+            "        CONCAT(temperature, '°C ', humidity, '% ', light_level, ' lux') LIKE CONCAT('%', :keyword, '%')" +
             "    )) OR " +
             "    (:type = 'id'          AND CAST(id AS CHAR) LIKE CONCAT('%', :keyword, '%')) OR " +
-            "    (:type = 'temperature' AND CAST(temperature AS CHAR) LIKE CONCAT('%', :keyword, '%')) OR " +
-            "    (:type = 'humidity'    AND CAST(humidity AS CHAR) LIKE CONCAT('%', :keyword, '%')) OR " +
-            "    (:type = 'light'       AND CAST(light_level AS CHAR) LIKE CONCAT('%', :keyword, '%')) OR " +
-            "    (:type = 'wind_speed'  AND CAST(wind_speed AS CHAR) LIKE CONCAT('%', :keyword, '%')) OR " +
-            "    (:type = 'time'        AND CAST(time AS CHAR) LIKE CONCAT('%', :keyword, '%'))" +
+            "    (:type = 'temperature' AND CONCAT(temperature, '°C') LIKE CONCAT('%', :keyword, '%')) OR " +
+            "    (:type = 'humidity'    AND CONCAT(humidity, '%') LIKE CONCAT('%', :keyword, '%')) OR " +
+            "    (:type = 'light'       AND CONCAT(light_level, ' lux') LIKE CONCAT('%', :keyword, '%')) OR " +
+            "    (:type = 'wind_speed'  AND CONCAT(wind_speed, ' m/s') LIKE CONCAT('%', :keyword, '%')) OR " +
+            "    (:type = 'time'        AND DATE_FORMAT(time, '%d %b %Y, %H:%i:%s') LIKE CONCAT('%', :keyword, '%'))" +
             ")")
     Page<SensorData> findAllSensorData(@Param("type")    String type,
                                        @Param("keyword") String keyword,

@@ -12,7 +12,7 @@
   /* Sidebar */
   --sidebar-bg-top: #87CEEB;
   --sidebar-bg-bottom: #FFFFFF;
-  --sidebar-width: 100px;
+  --sidebar-width: 260px;
 
   /* Content */
   --content-bg: #FFFFFF;
@@ -37,9 +37,12 @@
   --severity-low: #EAB308;
 
   /* Device Status */
-  --status-on: #22D3EE;
+  --status-on: #22C55E;
   --status-off: #EF4444;
   --status-processing: #F97316;
+  --color-fan: #3B82F6;
+  --color-bulb: #F59E0B;
+  --color-dehumidifier: #06B6D4;
 
   /* Toggle */
   --toggle-on: #22C55E;
@@ -69,11 +72,11 @@ body {
 .sidebar {
   width: var(--sidebar-width);
   min-height: 100vh;
-  background: linear-gradient(180deg, var(--sidebar-bg-top) 0%, var(--sidebar-bg-bottom) 100%);
+  background: linear-gradient(90deg, var(--sidebar-bg-top) 0%, var(--sidebar-bg-bottom) 100%);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 16px 0;
+  align-items: flex-start;
+  padding: 24px 0;
   position: fixed;
   left: 0;
   top: 0;
@@ -83,25 +86,27 @@ body {
 
 .sidebar-logo {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-bottom: 24px;
+  gap: 12px;
+  padding: 0 20px;
+  width: 100%;
+  margin-bottom: 40px;
+  margin-top: 10px;
 }
 
 .sidebar-logo img {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
 }
 
 .sidebar-logo-text {
-  font-size: 9px;
-  font-weight: 700;
-  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  text-align: left;
   color: #1E3A5F;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-top: 4px;
   line-height: 1.2;
 }
 
@@ -116,28 +121,31 @@ body {
 
 .sidebar-item {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  width: 76px;
-  height: 68px;
-  border-radius: 14px;
+  justify-content: flex-start;
+  width: calc(100% - 32px);
+  height: 52px;
+  padding: 0 16px;
+  margin: 0 16px;
+  border-radius: 12px;
   text-decoration: none;
   color: #374151;
-  gap: 4px;
-  transition: background 0.2s, color 0.2s;
+  gap: 14px;
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .sidebar-item:hover {
-  background-color: rgba(124, 58, 237, 0.12);
+  background-color: rgba(124, 58, 237, 0.1);
   color: var(--color-primary);
-  text-decoration: none;
+  transform: translateX(4px);
 }
 
 .sidebar-item.active {
   background-color: var(--color-primary);
   color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
 .sidebar-item.active .sidebar-icon {
@@ -145,15 +153,15 @@ body {
 }
 
 .sidebar-item img.sidebar-icon {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
 }
 
 .sidebar-label {
-  font-size: 10px;
-  font-weight: 500;
-  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
   line-height: 1.2;
 }
 
@@ -386,8 +394,67 @@ body {
 
 .device-card-name {
   font-size: 16px;
-  font-weight: 600;
-  color: #1F2937;
+  font-weight: 700;
+  color: #374151;
+}
+
+.device-card-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #F3F4F6;
+  transition: all 0.3s ease;
+}
+
+.device-card-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* Animations */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes glow {
+  0%, 100% { filter: drop-shadow(0 0 2px #FBBF24); }
+  50% { filter: drop-shadow(0 0 12px #F59E0B); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* State-based animations */
+.device-card.on.fan .device-card-icon img {
+  animation: spin 1.5s linear infinite;
+}
+
+.device-card.on.bulb .device-card-icon {
+  background: rgba(245, 158, 11, 0.2);
+}
+.device-card.on.bulb .device-card-icon img {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.device-card.on.dehumidifier .device-card-icon {
+  background: rgba(6, 182, 212, 0.2);
+}
+.device-card.on.dehumidifier .device-card-icon img {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Specific card styles */
+.device-card.on {
+  border-color: var(--color-primary);
+  background: linear-gradient(145deg, #ffffff 0%, var(--color-primary-light) 100%);
+  box-shadow: 0 10px 20px -5px rgba(124, 58, 237, 0.2);
 }
 
 /* ============================================
@@ -579,6 +646,24 @@ input:checked + .toggle-slider:before {
 .search-icon-btn:hover {
   background: var(--color-primary-light);
   color: var(--color-primary);
+}
+
+.search-select {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #E5E7EB;
+  background-color: #F3F4F6;
+  font-size: 14px;
+  color: #374151;
+  outline: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.search-select:focus {
+  border-color: var(--color-primary);
+  background-color: #FFFFFF;
 }
 
 /* ============================================

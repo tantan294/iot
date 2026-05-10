@@ -1,14 +1,14 @@
 // ─── Date formatting ────────────────────────────────────────────────────────
 export const formatDate = (timeArray: any): string => {
   if (Array.isArray(timeArray)) {
-    const [_year, month, day, hour, minute, second] = timeArray;
+    const [year, month, day, hour, minute, second] = timeArray;
     const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    return `${day} ${monthNames[month - 1]}, ${String(hour).padStart(2,"0")}:${String(minute).padStart(2,"0")}:${String(second).padStart(2,"0")}`;
+    return `${day} ${monthNames[month - 1]} ${year}, ${String(hour).padStart(2,"0")}:${String(minute).padStart(2,"0")}:${String(second).padStart(2,"0")}`;
   }
   if (typeof timeArray === "string") {
     const date = new Date(timeArray);
     const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    return `${date.getDate()} ${monthNames[date.getMonth()]}, ${String(date.getHours()).padStart(2,"0")}:${String(date.getMinutes()).padStart(2,"0")}:${String(date.getSeconds()).padStart(2,"0")}`;
+    return `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}, ${String(date.getHours()).padStart(2,"0")}:${String(date.getMinutes()).padStart(2,"0")}:${String(date.getSeconds()).padStart(2,"0")}`;
   }
   return "...";
 };

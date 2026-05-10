@@ -28,7 +28,11 @@ public class DeviceHistoryService {
 
         PageRequest pageable = PageRequest.of(modelSearch.getPageNumber() - 1, modelSearch.getPageSize(), sort);
 
-        Page<DeviceHistory> deviceHistoryPage = deviceHistoryRepo.findAllDeviceHistory(modelSearch.getKeyword(), pageable);
+        Page<DeviceHistory> deviceHistoryPage = deviceHistoryRepo.findAllDeviceHistory(
+                modelSearch.getKeyword(),
+                modelSearch.getDeviceName(),
+                modelSearch.getActionStatus(),
+                pageable);
 
         return deviceHistoryPage;
     }

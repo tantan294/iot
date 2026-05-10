@@ -13,6 +13,8 @@ import lombok.Setter;
 public class ModelSearch {
     private String keyword;
     private String type;
+    private String deviceName;
+    private Boolean actionStatus;
 
     @Schema(example = "id")
     private String sortBy;

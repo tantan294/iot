@@ -50,8 +50,16 @@ export const Statistics = () => {
     fetchData(1, keyword);
   };
 
-  // Flatten all records → rows
-  const rows: FlatSensorRow[] = data.flatMap(flattenSensorRecord);
+  // Flatten all records → rows, then filter based on keyword to show only matching sensor types
+  const rows: FlatSensorRow[] = data.flatMap(flattenSensorRecord).filter((row) => {
+    if (!keyword) return true;
+    const lowerKeyword = keyword.toLowerCase();
+    return (
+      row.deviceName.toLowerCase().includes(lowerKeyword) ||
+      row.value.toLowerCase().includes(lowerKeyword) ||
+      formatDate(row.timestamp).toLowerCase().includes(lowerKeyword)
+    );
+  });
 
   return (
     <div>

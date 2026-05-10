@@ -4,7 +4,7 @@ import { DeviceHistoryService } from "../service/DeviceHistoryService";
 import { useAppDispatch } from "../store/hooks";
 import { showOrHideSpinner } from "../reducer/SpinnerSlice";
 import { formatDate, translateDeviceName } from "../util/AppUtil";
-import { FaSort, FaFilter } from "react-icons/fa";
+import { FaSort, FaSearch } from "react-icons/fa";
 
 type SearchModel = {
   keyword: string;
@@ -13,6 +13,8 @@ type SearchModel = {
   pageSize: number;
   pageNumber: number;
   timer: number;
+  deviceName: string;
+  actionStatus: string; // "all", "on", "off"
 };
 
 const StatusBadge = ({ action }: { action: boolean }) => (
@@ -32,6 +34,8 @@ export const History = () => {
     pageSize: 10,
     pageNumber: 1,
     timer: 0,
+    deviceName: "",
+    actionStatus: "all",
   });
 
   useEffect(() => {
@@ -43,6 +47,8 @@ export const History = () => {
         sortOrder:  searchModel.sortOrder,
         pageSize:   searchModel.pageSize,
         pageNumber: searchModel.pageNumber,
+        deviceName: searchModel.deviceName,
+        actionStatus: searchModel.actionStatus === "on" ? true : searchModel.actionStatus === "off" ? false : undefined,
       })
       .then((response) => {
         if (response.data.httpCode === 200) {
@@ -69,12 +75,43 @@ export const History = () => {
       <h1 className="page-title">Action History</h1>
 
       {/* Filter/sort toolbar */}
-      <div className="search-bar" style={{ justifyContent: "flex-end" }}>
-        <button className="search-icon-btn" onClick={() => handleSort("time")} title="Sort">
-          <FaSort />
+      <div className="search-bar">
+        <div className="search-input-wrap">
+          <input
+            type="text"
+            placeholder="Search action or time..."
+            value={searchModel.keyword}
+            onChange={(e) => setSearchModel(p => ({ ...p, keyword: e.target.value }))}
+            onKeyDown={(e) => e.key === "Enter" && setSearchModel(p => ({ ...p, timer: Date.now(), pageNumber: 1 }))}
+          />
+        </div>
+        
+        <select 
+          className="search-select"
+          value={searchModel.deviceName}
+          onChange={(e) => setSearchModel(p => ({ ...p, deviceName: e.target.value, timer: Date.now(), pageNumber: 1 }))}
+        >
+          <option value="">All Devices</option>
+          <option value="fan">Fan</option>
+          <option value="bulb">Bulb</option>
+          <option value="dehumidifier">Dehumidifier</option>
+        </select>
+
+        <select 
+          className="search-select"
+          value={searchModel.actionStatus}
+          onChange={(e) => setSearchModel(p => ({ ...p, actionStatus: e.target.value, timer: Date.now(), pageNumber: 1 }))}
+        >
+          <option value="all">All Status</option>
+          <option value="on">On</option>
+          <option value="off">Off</option>
+        </select>
+
+        <button className="search-icon-btn" onClick={() => setSearchModel(p => ({ ...p, timer: Date.now(), pageNumber: 1 }))} title="Search">
+          <FaSearch />
         </button>
-        <button className="search-icon-btn" title="Filter">
-          <FaFilter />
+        <button className="search-icon-btn" onClick={() => handleSort("time")} title="Sort Time">
+          <FaSort />
         </button>
       </div>
 

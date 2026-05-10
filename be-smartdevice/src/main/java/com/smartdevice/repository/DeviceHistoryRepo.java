@@ -12,18 +12,29 @@ import java.util.List;
 public interface DeviceHistoryRepo extends JpaRepository<DeviceHistory, Long> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM device_history " +
-            "WHERE :keyword IS NULL " +
-            "OR id LIKE CONCAT('%', :keyword, '%') " +
-            "OR name LIKE CONCAT('%', :keyword, '%') " +
-            "OR action LIKE CONCAT('%', :keyword, '%') " +
-            "OR time LIKE CONCAT('%', :keyword, '%')",
+            "WHERE (:keyword IS NULL OR :keyword = '' OR (" +
+            "    CAST(id AS CHAR) LIKE CONCAT('%', :keyword, '%') " +
+            "    OR name LIKE CONCAT('%', :keyword, '%') " +
+            "    OR (action = 1 AND 'on' LIKE CONCAT('%', :keyword, '%')) " +
+            "    OR (action = 0 AND 'off' LIKE CONCAT('%', :keyword, '%')) " +
+            "    OR DATE_FORMAT(time, '%d %b %Y, %H:%i:%s') LIKE CONCAT('%', :keyword, '%')" +
+            ")) " +
+            "AND (:deviceName IS NULL OR :deviceName = '' OR name = :deviceName) " +
+            "AND (:actionStatus IS NULL OR action = :actionStatus)",
             countQuery = "SELECT COUNT(*) FROM device_history " +
-                    "WHERE :keyword IS NULL " +
-                    "OR id LIKE CONCAT('%', :keyword, '%') " +
-                    "OR name LIKE CONCAT('%', :keyword, '%') " +
-                    "OR action LIKE CONCAT('%', :keyword, '%') " +
-                    "OR time LIKE CONCAT('%', :keyword, '%')")
-    Page<DeviceHistory> findAllDeviceHistory(@Param("keyword") String keyword, Pageable pageable);
+                    "WHERE (:keyword IS NULL OR :keyword = '' OR (" +
+                    "    CAST(id AS CHAR) LIKE CONCAT('%', :keyword, '%') " +
+                    "    OR name LIKE CONCAT('%', :keyword, '%') " +
+                    "    OR (action = 1 AND 'on' LIKE CONCAT('%', :keyword, '%')) " +
+                    "    OR (action = 0 AND 'off' LIKE CONCAT('%', :keyword, '%')) " +
+                    "    OR DATE_FORMAT(time, '%d %b %Y, %H:%i:%s') LIKE CONCAT('%', :keyword, '%')" +
+                    ")) " +
+                    "AND (:deviceName IS NULL OR :deviceName = '' OR name = :deviceName) " +
+                    "AND (:actionStatus IS NULL OR action = :actionStatus)")
+    Page<DeviceHistory> findAllDeviceHistory(@Param("keyword") String keyword,
+                                             @Param("deviceName") String deviceName,
+                                             @Param("actionStatus") Boolean actionStatus,
+                                             Pageable pageable);
 
     @Query(nativeQuery = true, value = """
             SELECT d1.*
